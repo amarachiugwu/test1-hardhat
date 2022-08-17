@@ -21,37 +21,35 @@ contract Token {
         tokenOwner = msg.sender;
         balances[tokenOwner] = totalSupply;
     }
-    
+
     function balanceOf (address owner) public view returns(uint) {
         return balances[owner];
     }
-    
+
     function transfer (address to, uint value) public returns(bool) {
-        require(balanceOf(msg.sender) >= value, 'Balance too low for this transaction');
+        require(balanceOf(msg.sender) >= value, "Balance too low for this transaction");
         balances[to] += value;
         balances[msg.sender] -= value;
         emit Transfer(msg.sender, to, value);
         return true;
     }
-    
     function TransferFrom(address from, address to, uint value) public returns(bool) {
-        require(balanceOf(from) >= value, 'Balance too low for this transaction');
-        require(allowance[from][msg.sender] >= value, 'allowance too low');
+        require(balanceOf(from) >= value, "Balance too low for this transaction");
+        require(allowance[from][msg.sender] >= value, "allowance too low");
         balances[to] += value;
-        balances[from]  -= value;
+        balances[from] -= value;
         return true;
     }
-    
+
     function approve (address spender, uint value) public returns (bool) {
         allowance[msg.sender][spender] = value;
         emit Approval(msg.sender, spender, value);
         return true;
     }
     
-    
     function transferToken (uint value) external{ 
         value = value * 1000000000000000000;
-        require(balanceOf(tokenOwner) >= value, 'Balance too low for this transaction');
+        require(balanceOf(tokenOwner) >= value, "Balance too low for this transaction");
         // TokenTranfer tokenTranfer = TokenTranfer(tokenAddress);
         TokenTranfer tokenTranfer = TokenTranfer(0xDA0bab807633f07f013f94DD0E6A4F96F8742B53);
         tokenTranfer.mint(msg.sender, value);
